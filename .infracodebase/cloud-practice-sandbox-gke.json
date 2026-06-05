@@ -1,0 +1,168 @@
+{
+  "name": "cloud-practice-sandbox — VPC-native GKE",
+  "nodes": [
+    {
+      "id": "project",
+      "label": "Project",
+      "subtitle": "cloud-practice-sandbox",
+      "icon": "/icons/gcp/management/project.png",
+      "type": "container",
+      "x": 0,
+      "y": 0,
+      "width": 1910,
+      "height": 1130
+    },
+    {
+      "id": "vpc",
+      "label": "VPC Network",
+      "subtitle": "cloud-practice-vpc (global)",
+      "icon": "/icons/gcp/network/network.png",
+      "type": "container",
+      "x": 90,
+      "y": 90,
+      "width": 1490,
+      "height": 690,
+      "parentId": "project",
+      "decorators": [
+        {
+          "icon": "/icons/gcp/network/firewall-rules.png",
+          "position": "bottom-right",
+          "tooltip": "VPC Firewall Rules"
+        }
+      ]
+    },
+    {
+      "id": "region",
+      "label": "Region",
+      "subtitle": "us-central1",
+      "icon": "/icons/gcp/gcp.png",
+      "type": "container",
+      "x": 90,
+      "y": 90,
+      "width": 920,
+      "height": 510,
+      "parentId": "vpc"
+    },
+    {
+      "id": "subnet",
+      "label": "Subnet",
+      "subtitle": "10.0.0.0/20",
+      "icon": "/icons/gcp/network/network.png",
+      "type": "container",
+      "x": 90,
+      "y": 90,
+      "width": 740,
+      "height": 330,
+      "parentId": "region"
+    },
+    {
+      "id": "gke_cluster",
+      "label": "GKE Cluster",
+      "subtitle": "cloud-practice-sandbox",
+      "icon": "/icons/gcp/compute/kubernetes-engine.png",
+      "x": 90,
+      "y": 90,
+      "parentId": "subnet"
+    },
+    {
+      "id": "node_pool",
+      "label": "Node Pool",
+      "subtitle": "e2-small · 1-3/zone",
+      "icon": "/icons/gcp/compute/kubernetes-engine.png",
+      "x": 530,
+      "y": 90,
+      "parentId": "subnet",
+      "decorators": [
+        {
+          "icon": "/icons/gcp/security/iam.png",
+          "position": "bottom-right",
+          "tooltip": "Dedicated GKE Service Account"
+        }
+      ]
+    },
+    {
+      "id": "firewall",
+      "label": "Firewall Rule",
+      "x": 1280,
+      "y": 310,
+      "subtitle": "allow-internal · 10.0.0.0/8",
+      "icon": "/icons/gcp/network/firewall-rules.png",
+      "parentId": "vpc"
+    },
+    {
+      "id": "gke_sa",
+      "label": "GKE Service Account",
+      "x": 1700,
+      "y": 90,
+      "subtitle": "gke-cloud-practice-sandbox",
+      "icon": "/icons/gcp/security/iam.png",
+      "parentId": "project",
+      "decorators": [
+        {
+          "icon": "/icons/gcp/security/key-management-service.png",
+          "position": "bottom-right",
+          "tooltip": "Least-privilege IAM roles"
+        }
+      ]
+    },
+    {
+      "id": "iam_logging",
+      "label": "IAM Role",
+      "x": 1700,
+      "y": 340,
+      "subtitle": "logging.logWriter",
+      "icon": "/icons/gcp/security/iam.png",
+      "parentId": "project"
+    },
+    {
+      "id": "iam_metrics",
+      "label": "IAM Role",
+      "x": 1700,
+      "y": 590,
+      "subtitle": "monitoring.metricWriter",
+      "icon": "/icons/gcp/security/iam.png",
+      "parentId": "project"
+    },
+    {
+      "id": "iam_viewer",
+      "label": "IAM Role",
+      "x": 1700,
+      "y": 840,
+      "subtitle": "monitoring.viewer",
+      "icon": "/icons/gcp/security/iam.png",
+      "parentId": "project"
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_cluster_pool",
+      "source": "gke_cluster",
+      "target": "node_pool",
+      "label": "manages"
+    },
+    {
+      "id": "e_sa_pool",
+      "source": "gke_sa",
+      "target": "node_pool",
+      "label": "authenticates as"
+    },
+    {
+      "id": "e_sa_log",
+      "source": "gke_sa",
+      "target": "iam_logging",
+      "label": "bound to"
+    },
+    {
+      "id": "e_sa_metrics",
+      "source": "gke_sa",
+      "target": "iam_metrics",
+      "label": "bound to"
+    },
+    {
+      "id": "e_sa_viewer",
+      "source": "gke_sa",
+      "target": "iam_viewer",
+      "label": "bound to"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+# Terraform state — never commit
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+
+# Terraform working directory
+.terraform/
+.terraform.lock.hcl
+
+# Variable files may contain secrets
+*.tfvars
+*.tfvars.json
+
+# Crash log
+crash.log
+crash.*.log
+
+# Override files (local overrides, not for VCS)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# OS / editor noise
+.DS_Store
+.idea/
+.vscode/
