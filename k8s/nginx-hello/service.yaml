@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-hello
+  namespace: nginx-hello
+  labels:
+    app.kubernetes.io/name: nginx-hello
+    app.kubernetes.io/component: web
+  annotations:
+    # GCP: use a standard (non-premium) external IP to keep costs low for a sandbox
+    networking.gke.io/load-balancer-type: "External"
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: nginx-hello
+    app.kubernetes.io/component: web
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80        # external port clients connect to
+      targetPort: http # maps to the named port on the container (80)
+  # externalTrafficPolicy: Cluster (default) — preserves loadbalancer health checks
+  # across all nodes, simpler for a sandbox; use Local if you need source IP preservation
