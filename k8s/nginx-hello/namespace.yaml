@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-hello
+  labels:
+    app.kubernetes.io/name: nginx-hello
+    app.kubernetes.io/managed-by: kubectl

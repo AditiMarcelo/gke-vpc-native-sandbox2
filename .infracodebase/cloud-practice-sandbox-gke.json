@@ -10,7 +10,7 @@
       "x": 0,
       "y": 0,
       "width": 1910,
-      "height": 1130
+      "height": 1800
     },
     {
       "id": "vpc",
@@ -83,19 +83,19 @@
     {
       "id": "firewall",
       "label": "Firewall Rule",
-      "x": 1280,
-      "y": 310,
       "subtitle": "allow-internal · 10.0.0.0/8",
       "icon": "/icons/gcp/network/firewall-rules.png",
+      "x": 1280,
+      "y": 310,
       "parentId": "vpc"
     },
     {
       "id": "gke_sa",
       "label": "GKE Service Account",
-      "x": 1700,
-      "y": 90,
       "subtitle": "gke-cloud-practice-sandbox",
       "icon": "/icons/gcp/security/iam.png",
+      "x": 1700,
+      "y": 90,
       "parentId": "project",
       "decorators": [
         {
@@ -108,29 +108,86 @@
     {
       "id": "iam_logging",
       "label": "IAM Role",
-      "x": 1700,
-      "y": 340,
       "subtitle": "logging.logWriter",
       "icon": "/icons/gcp/security/iam.png",
+      "x": 1700,
+      "y": 340,
       "parentId": "project"
     },
     {
       "id": "iam_metrics",
       "label": "IAM Role",
-      "x": 1700,
-      "y": 590,
       "subtitle": "monitoring.metricWriter",
       "icon": "/icons/gcp/security/iam.png",
+      "x": 1700,
+      "y": 590,
       "parentId": "project"
     },
     {
       "id": "iam_viewer",
       "label": "IAM Role",
-      "x": 1700,
-      "y": 840,
       "subtitle": "monitoring.viewer",
       "icon": "/icons/gcp/security/iam.png",
+      "x": 1700,
+      "y": 840,
       "parentId": "project"
+    },
+    {
+      "id": "internet",
+      "label": "Internet",
+      "subtitle": "Public traffic",
+      "icon": "/icons/gcp/network/dns.png",
+      "x": 180,
+      "y": 880,
+      "parentId": "project"
+    },
+    {
+      "id": "gcp_lb",
+      "label": "GCP Load Balancer",
+      "subtitle": "External, port 80",
+      "icon": "/icons/gcp/network/load-balancing.png",
+      "x": 180,
+      "y": 1130,
+      "parentId": "project"
+    },
+    {
+      "id": "ns_nginx",
+      "label": "nginx-hello",
+      "x": 90,
+      "y": 1380,
+      "subtitle": "Namespace",
+      "icon": "/icons/k8s/group/ns.png",
+      "type": "container",
+      "width": 860,
+      "height": 330,
+      "parentId": "project"
+    },
+    {
+      "id": "svc_nginx",
+      "label": "Service",
+      "subtitle": "LoadBalancer :80",
+      "icon": "/icons/k8s/network/svc.png",
+      "x": 90,
+      "y": 90,
+      "parentId": "ns_nginx"
+    },
+    {
+      "id": "deploy_nginx",
+      "label": "NGINX Deployment",
+      "subtitle": "nginx:1.27-alpine ×2",
+      "icon": "/icons/k8s/compute/deploy.png",
+      "x": 370,
+      "y": 90,
+      "parentId": "ns_nginx"
+    },
+    {
+      "id": "cm_nginx",
+      "label": "ConfigMap",
+      "subtitle": "index.html",
+      "icon": "/icons/k8s/podconfig/cm.png",
+      "x": 650,
+      "y": 90,
+      "parentId": "ns_nginx"
     }
   ],
   "edges": [
@@ -163,6 +220,30 @@
       "source": "gke_sa",
       "target": "iam_viewer",
       "label": "bound to"
+    },
+    {
+      "id": "e_internet_lb",
+      "source": "internet",
+      "target": "gcp_lb",
+      "label": "HTTP :80"
+    },
+    {
+      "id": "e_lb_svc",
+      "source": "gcp_lb",
+      "target": "svc_nginx",
+      "label": "routes to"
+    },
+    {
+      "id": "e_svc_deploy",
+      "source": "svc_nginx",
+      "target": "deploy_nginx",
+      "label": "selects pods"
+    },
+    {
+      "id": "e_cm_deploy",
+      "source": "cm_nginx",
+      "target": "deploy_nginx",
+      "label": "mounts HTML"
     }
   ]
 }
